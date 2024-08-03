@@ -11,3 +11,4 @@ runs:
         # The main version this project uses
         dotnet-version: '8.0.x'
         cache: true
+        cache-dependency-path: '**/packages.lock.json'
