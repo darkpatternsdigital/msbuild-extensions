@@ -25,6 +25,16 @@ For solution-wide settings:
 
 3. Place the `.editorconfig` in the same folder as your Directory.Build.props.
 
+## Additional recommendations
+
+* Ensure you have a `.gitattributes` file that sets the default line ending for
+  a git checkout to prevent end-of-line changes on first build after switching
+  branches. For example:
+
+    ```gitattributes
+    * text=auto eol=lf
+    ```
+
 ## Configuration
 
 ### Properties
