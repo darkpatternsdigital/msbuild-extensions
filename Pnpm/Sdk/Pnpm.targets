@@ -1,0 +1,115 @@
+<Project>
+    <PropertyGroup>
+        <PnpmBuildScript Condition=" '$(PnpmBuildScript)' == '' ">pnpm run --if-present build</PnpmBuildScript>
+        <PnpmTestScript Condition=" '$(PnpmTestScript)' == '' ">pnpm run --if-present test</PnpmTestScript>
+        <PnpmLintScript Condition=" '$(PnpmLintScript)' == '' ">pnpm run --if-present lint</PnpmLintScript>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(PropertyGroup)' == '' ">
+        <PnpmRootPath Condition=" '$(SolutionRoot)' != '' ">$(SolutionRoot)</PnpmRootPath>
+        <PnpmRootPath Condition=" '$(SolutionRoot)' == '' ">$(ProjectDir)</PnpmRootPath>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PnpmStepRecordDir Condition=" '$(PnpmStepRecordDir)' == '' ">$(ProjectDir)node_modules\</PnpmStepRecordDir>
+        <!-- pnpm allows an install for the entire solution -->
+        <PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(PnpmRootPath)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
+        <PnpmLintRecordPath Condition=" '$(PnpmLintRecordPath)' == '' ">$(PnpmStepRecordDir)_.lint.$(Configuration)._</PnpmLintRecordPath>
+    </PropertyGroup>
+
+    <ItemGroup Condition=" '$(Compile)' == '' ">
+        <Compile Include="src/**" Watch="false" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(RestoreConfig)' == '' ">
+        <RestoreConfig Include="$(PnpmRootPath)package.json" />
+        <RestoreConfig Include="$(PnpmRootPath)pnpm-lock.yaml" />
+        <RestoreConfig Include="package.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <Watch Include="@(CompileConfig)" />
+        <Watch Include="@(RestoreConfig)" />
+    </ItemGroup>
+    <ItemGroup Condition=" '$(PnpmPackagedFiles)' == '' ">
+        <PnpmPackagedFiles Include="@(CompileConfig)" />
+        <PnpmPackagedFiles Condition="Exists('.npmignore')" Include=".npmignore" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JsonPeek" Version="1.2.0" PrivateAssets="All" />
+    </ItemGroup>
+
+    <Target Name="_LoadPackageJson" BeforeTargets="PnpmPack">
+        <JsonPeek ContentPath="package.json" Query="$.name">
+            <Output TaskParameter="Result" ItemName="NpmPackageName" />
+        </JsonPeek>
+        <JsonPeek ContentPath="package.json" Query="$.version">
+            <Output TaskParameter="Result" ItemName="NpmPackageVersion" />
+        </JsonPeek>
+
+        <PropertyGroup>
+            <NpmPackageNormalizedName>@(NpmPackageName->'%(Identity)'->Replace("@", "")->Replace("/", "-"))</NpmPackageNormalizedName>
+            <NpmPackageVersion>@(NpmPackageVersion->'%(Identity)')</NpmPackageVersion>
+            <VersionPrefix>@(NpmPackageVersion->'%(Identity)')</VersionPrefix>
+            <Version>$(VersionPrefix)</Version>
+            <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+        </PropertyGroup>
+    </Target>
+
+    <Target Name="PnpmInstall"
+        BeforeTargets="NodeBuild;Lint;Restore;_GenerateProjectRestoreGraph"
+        Inputs="@(RestoreConfig)"
+        Outputs="$(PnpmInstallRecordPath)"
+        Condition=" '$(PnpmRootPath)' != '' ">
+        <!-- Runs _PnpmInstall in a critical section, meaning only one  -->
+        <MsBuild
+            Projects="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.esproj"
+            Targets="PnpmInstall"
+            BuildInParallel="false"
+            Properties="SolutionRoot=$(PnpmRootPath)" />
+    </Target>
+
+    <Target Name="NodeBuild"
+        Condition="'$(PnpmBuildScript)' != ''"
+        BeforeTargets="Build"
+        Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)"
+        Outputs="@(CompileOutputs)">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmBuildScript)" />
+        <Touch ForceTouch="true" Files="@(CompileOutputs)" />
+    </Target>
+
+    <Target Name="Lint"
+        Condition="'$(PnpmLintScript)' != ''"
+        Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)"
+        Outputs="$(PnpmLintRecordPath)">
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmLintScript)" />
+        <Touch ForceTouch="true" Files="@(PnpmLintRecordPath)" />
+    </Target>
+
+    <Target Name="PnpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild" Inputs="@(RestoreConfig);@(PnpmPackagedFiles);@(CompileOutputs)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(NpmPackageVersion).tgz">
+        <!-- Get current last-modified timestamp -->
+        <PropertyGroup>
+            <PackageJsonLastModifiedTime>$([System.IO.File]::GetLastWriteTime('package.json').ToString('g'))</PackageJsonLastModifiedTime>
+        </PropertyGroup>
+        <!-- Update the package.json to use the $(Version) value -->
+        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' " />
+        <!-- Build and move the pnpm package file -->
+        <MakeDir Directories="$(PackageOutputPath)"/>
+        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm pack" />
+        <Move SourceFiles="$(NpmPackageNormalizedName)-$(Version).tgz" DestinationFolder="$(PackageOutputPath)" />
+        <!-- If we're not in Release mode, restore the version -->
+        <Exec WorkingDirectory="$(ProjectDir)"
+            Command="npm version $(NpmPackageVersion)"
+            IgnoreExitCode="true"
+            Condition=" '$(NpmPackageVersion)' != '$(Version)' or '$(Configuration)' != 'Release' "
+            />
+        <!-- Put the timestamp back on this; it was not a substantial change (I hope!) -->
+        <Touch Files="package.json" Time="$(PackageJsonLastModifiedTime)" />
+    </Target>
+
+    <Target Name="VSTest_pnpm" BeforeTargets="VSTest" Condition=" '$(PnpmTestScript)' != '' ">
+        <CallTarget Condition="'$(VSTestNoBuild)' != 'true'" Targets="Build" />
+
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmTestScript)" />
+    </Target>
+
+    <Target Name="_PackOnBuild" AfterTargets="Build" DependsOnTargets="PnpmPack" Condition="'$(PackPnpmOnBuild)'=='true'" />
+
+</Project>
