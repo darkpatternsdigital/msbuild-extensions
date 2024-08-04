@@ -1,28 +1,18 @@
 <Project>
 	<PropertyGroup>
-		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<AnalysisLevel>latest-Recommended</AnalysisLevel>
-
-		<LintSkip Condition=" '$(LintSkip)' == '' ">false</LintSkip>
-		<LintEnforceNoChanges Condition=" '$(LintEnforceNoChanges)' == '' and '$(Configuration)' == 'Release' ">true</LintEnforceNoChanges>
+		<LintRecordPath Condition=" '$(LintRecordPath)' == '' ">$(IntermediateOutputPath)/_.dpd-lint._</LintRecordPath>
 	</PropertyGroup>
-
-	<ItemGroup Condition=" '$(SolutionRoot)' != '' ">
-		<EditorConfigFiles Remove="$(SolutionRoot)**/*" />
-		<EditorConfigFiles Include="$(SolutionRoot).editorconfig" Visible="false" />
-	</ItemGroup>
-
 	<Target Name="Lint"
 	        Condition=" '$(LintSkip)' != 'true' "
 	        BeforeTargets="BeforeBuild"
 	        Inputs="@(Compile)"
-	        Outputs="@(IntermediateAssembly)">
+	        Outputs="$(LintRecordPath)">
 		<Exec Condition=" '$(LintEnforceNoChanges)' != 'true' "
 		      WorkingDirectory="$(ProjectDir)"
 		      Command="dotnet format &quot;$(ProjectPath)&quot;" />
 		<Exec Condition=" '$(LintEnforceNoChanges)' == 'true' "
 		      WorkingDirectory="$(ProjectDir)"
 		      Command="dotnet format &quot;$(ProjectPath)&quot; --verify-no-changes" />
+		<Touch AlwaysCreate="true" ForceTouch="true" Files="$(LintRecordPath)" />
 	</Target>
-
 </Project>
