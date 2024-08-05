@@ -43,7 +43,7 @@ For solution-wide settings:
 | :--- | :--------- | :------ |
 | EnforceCodeStyleInBuild | [See Microsoft's documentation for EnforceCodeStyleInBuild][ms-enforcecodestyleinbuild] | `true` |
 | AnalysisLevel | [See Microsoft's documentation for AnalysisLevel][ms-analysislevel] | `latest-Recommended` |
-| LintSkip | Skips the Lint target entirely if set to `true` | `false` |
+| LintSkipDotnet | Skips the Lint target entirely if set to `true` | `false` |
 | LintEnforceNoChanges | When `true`, will not update files but instead will cause an error if not already in the correct format | `true` if Configuration is `Release` |
 
 ### Targets

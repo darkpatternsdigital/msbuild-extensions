@@ -3,8 +3,10 @@
 		<LintRecordPath Condition=" '$(LintRecordPath)' == '' ">$(IntermediateOutputPath)/_.dpd-lint._</LintRecordPath>
 	</PropertyGroup>
 	<Target Name="Lint"
-	        Condition=" '$(LintSkip)' != 'true' "
-	        BeforeTargets="BeforeBuild"
+	        BeforeTargets="BeforeBuild" />
+	<Target Name="_DotnetLint"
+	        Condition=" '$(LintSkipDotnet)' != 'true' And ('$(Language)' == 'C#' Or '$(Language)' == 'VB') "
+	        BeforeTargets="Lint"
 	        Inputs="@(Compile)"
 	        Outputs="$(LintRecordPath)">
 		<Exec Condition=" '$(LintEnforceNoChanges)' != 'true' "
