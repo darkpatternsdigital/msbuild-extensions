@@ -1,0 +1,21 @@
+<Project>
+	<PropertyGroup>
+		<LintRecordPath Condition=" '$(LintRecordPath)' == '' ">$(IntermediateOutputPath)/_.dpd-lint._</LintRecordPath>
+	</PropertyGroup>
+	<Target Name="Lint"
+	        BeforeTargets="BeforeBuild" />
+	<Target Name="_DotnetLint"
+	        Condition=" '$(LintSkipDotnet)' != 'true' And ('$(Language)' == 'C#' Or '$(Language)' == 'VB') "
+	        BeforeTargets="Lint"
+	        Inputs="@(Compile)"
+	        Outputs="$(LintRecordPath)">
+		<Exec Condition=" '$(LintEnforceNoChanges)' != 'true' "
+		      WorkingDirectory="$(ProjectDir)"
+		      Command="dotnet format &quot;$(ProjectPath)&quot;" />
+		<Exec Condition=" '$(LintEnforceNoChanges)' == 'true' "
+		      WorkingDirectory="$(ProjectDir)"
+		      Command="dotnet format &quot;$(ProjectPath)&quot; --verify-no-changes" />
+		<MakeDir Directories="$(IntermediateOutputPath)"/>
+		<Touch AlwaysCreate="true" ForceTouch="true" Files="$(LintRecordPath)" />
+	</Target>
+</Project>

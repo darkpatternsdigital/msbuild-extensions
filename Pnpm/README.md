@@ -22,6 +22,7 @@ Add build tooling to MSBuild to support PNPM projects!
 | PnpmTestScript | The command line to run for `dotnet test` | `pnpm run --if-present test` |
 | PnpmLintScript | The command line to run for lint checks | `pnpm run --if-present lint` |
 | PnpmRootPath | The path to the workspace root for the PNPM project. Should end with a `/` | `$(SolutionRoot)` or `$(ProjectDir)` |
+| LintSkipPnpm | If `'true'`, skips running the `PnpmLintScript`, even if it is set. | Not set |
 
 ### Items
 

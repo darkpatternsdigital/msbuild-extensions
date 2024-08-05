@@ -1,0 +1,11 @@
+<Project>
+	<PropertyGroup>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest-Recommended</AnalysisLevel>
+
+		<LintSkip>false</LintSkip>
+		<LintEnforceNoChanges Condition=" '$(Configuration)' == 'Release' ">true</LintEnforceNoChanges>
+	</PropertyGroup>
+
+	<!-- EditorConfigFiles automatically get loaded from the project's parent directories -->
+</Project>

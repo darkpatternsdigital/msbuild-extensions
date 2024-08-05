@@ -75,8 +75,12 @@
         <Touch ForceTouch="true" Files="@(CompileOutputs)" />
     </Target>
 
-    <Target Name="Lint"
-        Condition="'$(PnpmLintScript)' != ''"
+	<Target Name="Lint"
+	        BeforeTargets="BeforeBuild" />
+
+    <Target Name="_PnpmLint"
+        BeforeTargets="BeforeBuild"
+        Condition="'$(PnpmLintScript)' != '' and '$(LintSkipPnpm)' != 'true' "
         Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)"
         Outputs="$(PnpmLintRecordPath)">
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmLintScript)" />
