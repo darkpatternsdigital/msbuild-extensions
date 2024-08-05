@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<VersionPrefix>0.1.0</VersionPrefix>
+		<VersionPrefix>0.1.1</VersionPrefix>
 
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
 		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
-		<title>Controller source generators from OpenAPI specification for .NET 5</title>
-		<PackageSummary>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</PackageSummary>
-		<description>Adds source generators to generate C# controller base classes from an OpenAPI specification file.</description>
+		<title>SDK for PNPM-based builds in MSBuild</title>
+		<PackageSummary>An SDK-style project that adds targets, properties, and items for integrating with PNPM.</PackageSummary>
+		<description>An SDK-style project that adds targets, properties, and items for integrating with PNPM.</description>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
