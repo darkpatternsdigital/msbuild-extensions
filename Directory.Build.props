@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 	<PropertyGroup>
+		<UseArtifactsOutput>true</UseArtifactsOutput>
 		<RootNamespace>DarkPatterns.Build</RootNamespace>
-		<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
 	</PropertyGroup>
 
-	<Import Project="$(SolutionRoot)/eng/artifacts-proj/artifacts-proj.props" />
+	<Import Project="$(MSBuildThisFileDirectory)/Structure/Structure.props" />
 	<Import Project="$(RepositoryEngineeringDir)package-defaults/package-defaults.props" />
 	<Import Project="Directory.Build.local.props" Condition="exists('$(MSBuildThisFileDirectory)Directory.Build.local.props')" />
 </Project>
