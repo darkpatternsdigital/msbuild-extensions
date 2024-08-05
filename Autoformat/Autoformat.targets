@@ -15,6 +15,7 @@
 		<Exec Condition=" '$(LintEnforceNoChanges)' == 'true' "
 		      WorkingDirectory="$(ProjectDir)"
 		      Command="dotnet format &quot;$(ProjectPath)&quot; --verify-no-changes" />
+		<MakeDir Directories="$(IntermediateOutputPath)"/>
 		<Touch AlwaysCreate="true" ForceTouch="true" Files="$(LintRecordPath)" />
 	</Target>
 </Project>
