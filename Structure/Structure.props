@@ -1,0 +1,35 @@
+<Project>
+	<PropertyGroup Condition=" '$(SolutionRoot)' == '' ">
+		<SolutionRoot>$([MSBuild]::EnsureTrailingSlash($([System.IO.Path]::GetDirectoryName('$(DirectoryBuildPropsPath)'))))</SolutionRoot>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(RepositoryEngineeringDir)' == '' ">
+		<RepositoryEngineeringDir>$(SolutionRoot)eng/</RepositoryEngineeringDir>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(RootNamespace)' != '' ">
+		<AssemblyName Condition=" '$(AssemblyName)' == '' or '$(AssemblyName)' == '$(MSBuildProjectName)' ">$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
+	</PropertyGroup>
+
+	<!-- Checks that defaults are set -->
+	<PropertyGroup>
+		<UseArtifactsOutputSetCorrectly Condition=" '$(UseArtifactsOutput)' != 'true' ">false</UseArtifactsOutputSetCorrectly>
+		<SolutionRootSet Condition=" '$(SolutionRoot)' == '' ">false</SolutionRootSet>
+		<RepositoryEngineeringDirSet Condition=" '$(RepositoryEngineeringDir)' != '$(SolutionRoot)eng/' ">false</RepositoryEngineeringDirSet>
+	</PropertyGroup>
+
+	<Target Name="_VerifyDarkPatternsProjectStructure"
+	        BeforeTargets="Build;Rebuild;Clean;Restore">
+		<Warning
+			Condition=" '$(UseArtifactsOutputSetCorrectly)' == 'false' "
+			File="$(DirectoryBuildPropsPath)"
+			Text="Ensure &lt;UseArtifactsOutput&gt;true&lt;/UseArtifactsOutput&gt; is added to your Directory.Build.Props" />
+		<Warning
+			Condition=" '$(SolutionRootSet)' == 'false' "
+			File="$(DirectoryBuildPropsPath)"
+			Text="Ensure &lt;SolutionRoot&gt;%24(MSBuildThisFileDirectory)&lt;/SolutionRoot&gt; is added to your Directory.Build.Props" />
+		<Warning
+			Condition=" '$(SolutionRootSet)' != 'false' and '$(RepositoryEngineeringDirSet)' == 'false' "
+			File="$(DirectoryBuildPropsPath)"
+			Text="Ensure &lt;RepositoryEngineeringDir&gt;%24(SolutionRoot)eng/&lt;/RepositoryEngineeringDir&gt; is added to your Directory.Build.Props" />
+	</Target>
+
+</Project>

@@ -1,6 +1,6 @@
 # DarkPatterns.Build.Autoformat
 
-Adds autoformat tooling to MSBuild projects via dotnet format.
+Adds autoformat tooling to MSBuild projects via `dotnet format`.
 
 1. In a .NET project, add a package reference to
    `DarkPatterns.Build.Autoformat`.

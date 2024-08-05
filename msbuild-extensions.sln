@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pnpm", "Pnpm\Pnpm.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Autoformat", "Autoformat\Autoformat.csproj", "{FBDEB1A4-904A-481B-9953-6BBCA0A59480}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Structure", "Structure\Structure.csproj", "{4313B54C-064F-4F46-BF5E-ABE09551BDF1}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,5 +46,17 @@ Global
 		{FBDEB1A4-904A-481B-9953-6BBCA0A59480}.Release|x64.Build.0 = Release|Any CPU
 		{FBDEB1A4-904A-481B-9953-6BBCA0A59480}.Release|x86.ActiveCfg = Release|Any CPU
 		{FBDEB1A4-904A-481B-9953-6BBCA0A59480}.Release|x86.Build.0 = Release|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Debug|x64.Build.0 = Debug|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Debug|x86.Build.0 = Debug|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Release|x64.ActiveCfg = Release|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Release|x64.Build.0 = Release|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Release|x86.ActiveCfg = Release|Any CPU
+		{4313B54C-064F-4F46-BF5E-ABE09551BDF1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
