@@ -16,19 +16,23 @@
         <PnpmLintRecordPath Condition=" '$(PnpmLintRecordPath)' == '' ">$(PnpmStepRecordDir)_.lint.$(Configuration)._</PnpmLintRecordPath>
     </PropertyGroup>
 
-    <ItemGroup Condition=" '$(Compile)' == '' ">
-        <Compile Include="src/**" Watch="false" />
-    </ItemGroup>
-    <ItemGroup Condition=" '$(RestoreConfig)' == '' ">
+    <ItemGroup Condition=" '@(RestoreConfig)' == '' ">
         <RestoreConfig Include="$(PnpmRootPath)package.json" />
         <RestoreConfig Include="$(PnpmRootPath)pnpm-lock.yaml" />
         <RestoreConfig Include="package.json" />
+    </ItemGroup>
+    <ItemGroup Condition=" '@(CompileConfig)' == '' ">
+        <CompileConfig Include=".*rc" Exclude="@(RestoreConfig)" />
+        <CompileConfig Include="*.json" Exclude="@(RestoreConfig)" />
+    </ItemGroup>
+    <ItemGroup Condition=" '@(Compile)' == '' ">
+        <Compile Include="src/**" Watch="false" />
     </ItemGroup>
     <ItemGroup>
         <Watch Include="@(CompileConfig)" />
         <Watch Include="@(RestoreConfig)" />
     </ItemGroup>
-    <ItemGroup Condition=" '$(PnpmPackagedFiles)' == '' ">
+    <ItemGroup Condition=" '@(PnpmPackagedFiles)' == '' ">
         <PnpmPackagedFiles Include="@(CompileConfig)" />
         <PnpmPackagedFiles Condition="Exists('.npmignore')" Include=".npmignore" />
     </ItemGroup>

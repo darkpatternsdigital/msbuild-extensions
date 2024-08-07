@@ -7,7 +7,7 @@ Add build tooling to MSBuild to support PNPM projects!
    the `Sdk` to match this package and the latest version. For example:
 
 	```xml
-	<Project Sdk="DarkPatterns.Build.Pnpm/0.1.0">
+	<Project Sdk="DarkPatterns.Build.Pnpm/0.1.4">
 	```
 
 3. Set the corresponding settings, including `PnpmRootPath`, `PnpmBuildScript`, etc.
@@ -31,7 +31,7 @@ Add build tooling to MSBuild to support PNPM projects!
 | :--- | :--------- | :------ |
 | CompileOutputs | The files that will be created by the build process | None; required to run build script |
 | Compile | The inputs for build and lint | `src/**` |
-| CompileConfig[^1] | Inputs that could affect build configuration options.
+| CompileConfig[^1] | Inputs that could affect build configuration options. | `.*rc` and `*.json` files in the project root |
 | RestoreConfig[^1] | The inputs for the node restore configuration. | `$(PnpmRootPath)package.json`, `$(PnpmRootPath)pnpm-lock.yaml`, and `package.json` |
 | PnpmPackagedFiles | Additional inputs that will cause the packaged files to change | All CompileConfig items |
 
