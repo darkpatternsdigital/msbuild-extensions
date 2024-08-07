@@ -7,7 +7,7 @@ Add build tooling to MSBuild to support PNPM projects!
    the `Sdk` to match this package and the latest version. For example:
 
 	```xml
-	<Project Sdk="DarkPatterns.Build.Pnpm/0.1.0">
+	<Project Sdk="DarkPatterns.Build.Pnpm/0.1.4">
 	```
 
 3. Set the corresponding settings, including `PnpmRootPath`, `PnpmBuildScript`, etc.
