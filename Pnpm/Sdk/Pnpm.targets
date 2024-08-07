@@ -51,8 +51,6 @@
         <PropertyGroup>
             <NpmPackageNormalizedName>@(NpmPackageName->'%(Identity)'->Replace("@", "")->Replace("/", "-"))</NpmPackageNormalizedName>
             <NpmPackageVersion>@(NpmPackageVersion->'%(Identity)')</NpmPackageVersion>
-            <VersionPrefix>@(NpmPackageVersion->'%(Identity)')</VersionPrefix>
-            <Version>$(VersionPrefix)</Version>
             <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
         </PropertyGroup>
     </Target>
@@ -91,24 +89,46 @@
         <Touch ForceTouch="true" Files="@(PnpmLintRecordPath)" />
     </Target>
 
-    <Target Name="PnpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild" Inputs="@(RestoreConfig);@(PnpmPackagedFiles);@(CompileOutputs)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(NpmPackageVersion).tgz">
+    <Target Name="PnpmPack_PreVersion" BeforeTargets="PnpmPack" DependsOnTargets="_LoadPackageJson">
         <!-- Get current last-modified timestamp -->
         <PropertyGroup>
             <PackageJsonLastModifiedTime>$([System.IO.File]::GetLastWriteTime('package.json').ToString('g'))</PackageJsonLastModifiedTime>
         </PropertyGroup>
         <!-- Update the package.json to use the $(Version) value -->
-        <Exec WorkingDirectory="$(ProjectDir)" Command="npm version $(Version)" IgnoreExitCode="true" Condition=" '$(NpmPackageVersion)' != '$(Version)' " />
+        <Exec WorkingDirectory="$(ProjectDir)"
+            Command="npm version $(Version)"
+            IgnoreExitCode="true"
+            Condition=" '$(NpmPackageVersion)' != '$(Version)' "
+            EchoOff="true"
+            StandardOutputImportance="low"
+            />
+    </Target>
+
+    <Target Name="PnpmPack" BeforeTargets="Publish" DependsOnTargets="NodeBuild" Inputs="@(RestoreConfig);@(PnpmPackagedFiles);@(CompileOutputs)" Outputs="$(PackageOutputPath)$(NpmPackageNormalizedName)-$(NpmPackageVersion).tgz">
         <!-- Build and move the pnpm package file -->
         <MakeDir Directories="$(PackageOutputPath)"/>
-        <Exec WorkingDirectory="$(ProjectDir)" Command="pnpm pack" />
-        <Move SourceFiles="$(NpmPackageNormalizedName)-$(Version).tgz" DestinationFolder="$(PackageOutputPath)" />
-        <!-- If we're not in Release mode, restore the version -->
         <Exec WorkingDirectory="$(ProjectDir)"
-            Command="npm version $(NpmPackageVersion)"
-            IgnoreExitCode="true"
-            Condition=" '$(NpmPackageVersion)' != '$(Version)' or '$(Configuration)' != 'Release' "
+            Command="pnpm pack"
+            EchoOff="true"
+            StandardOutputImportance="low"
             />
-        <!-- Put the timestamp back on this; it was not a substantial change (I hope!) -->
+        <Move SourceFiles="$(NpmPackageNormalizedName)-$(Version).tgz" DestinationFolder="$(PackageOutputPath)" />
+    </Target>
+
+    <Target Name="PnpmPack_PostVersion" AfterTargets="PnpmPack" DependsOnTargets="NodeBuild;PnpmPack_PreVersion">
+        <PropertyGroup>
+            <!-- We always want the .NET VersionPrefix to be in the package.json when we're done -->
+            <NpmTargetPackageVersion>$(VersionPrefix)</NpmTargetPackageVersion>
+        </PropertyGroup>
+        <!-- Restore the version -->
+        <Exec WorkingDirectory="$(ProjectDir)"
+            Command="npm version $(NpmTargetPackageVersion)"
+            IgnoreExitCode="true"
+            Condition=" '$(NpmTargetPackageVersion)' != '$(Version)' "
+            EchoOff="true"
+            StandardOutputImportance="low"
+            />
+        <!-- Put the timestamp back on this; it only changed the version number -->
         <Touch Files="package.json" Time="$(PackageJsonLastModifiedTime)" />
     </Target>
 
