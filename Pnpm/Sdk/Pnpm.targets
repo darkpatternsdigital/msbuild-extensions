@@ -12,9 +12,13 @@
     <PropertyGroup>
         <PnpmStepRecordDir Condition=" '$(PnpmStepRecordDir)' == '' ">$(ProjectDir)node_modules\</PnpmStepRecordDir>
         <!-- pnpm allows an install for the entire solution -->
+        <PnpmInstallProjectPath Condition=" '$(PnpmInstallProjectPath)' == '' and '$(ArtifactsPath)' != '' ">$(ArtifactsPath)/pnpm-install.csproj</PnpmInstallProjectPath>
         <PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(PnpmRootPath)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
         <PnpmLintRecordPath Condition=" '$(PnpmLintRecordPath)' == '' ">$(PnpmStepRecordDir)_.lint.$(Configuration)._</PnpmLintRecordPath>
     </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="$(PnpmInstallProjectPath)" />
+    </ItemGroup>
 
     <ItemGroup Condition=" '@(RestoreConfig)' == '' ">
         <RestoreConfig Include="$(PnpmRootPath)package.json" />
@@ -55,12 +59,36 @@
         </PropertyGroup>
     </Target>
 
+    <Target Name="SetupRootInstalProject"
+        Condition=" '$(ArtifactsPath)' != '' "
+        BeforeTargets="CollectPackageReferences"
+        Inputs="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets"
+        Outputs="$(PnpmInstallProjectPath)"
+    >
+        <PropertyGroup>
+            <PnpmInstallProjectContents><![CDATA[
+<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
+	<PropertyGroup>
+		<SolutionRoot>$(PnpmRootPath)</SolutionRoot>
+	</PropertyGroup>
+	<Import Project="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets" />
+</Project>
+            ]]></PnpmInstallProjectContents>
+        </PropertyGroup>
+        <WriteLinesToFile
+            File="$(PnpmInstallProjectPath)"
+            Overwrite="true"
+            Lines="$(PnpmInstallProjectContents)" />
+    </Target>
+
     <Target Name="PnpmInstall"
         BeforeTargets="NodeBuild;Lint;Restore;_GenerateProjectRestoreGraph"
         Inputs="@(RestoreConfig)"
         Outputs="$(PnpmInstallRecordPath)"
-        Condition=" '$(PnpmRootPath)' != '' ">
-        <!-- Runs _PnpmInstall in a critical section, meaning only one  -->
+        Condition=" '$(PnpmRootPath)' != '' and '$(PnpmInstallProjectPath)' == '' ">
+        <Warning
+            Code="DPD_PNPM_001"
+            Text="Ensure &lt;UseArtifactsOutput&gt;true&lt;/UseArtifactsOutput&gt; is added to your Directory.Build.Props or set the location for a generated project in PnpmInstallProjectPath." />
         <MsBuild
             Projects="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.esproj"
             Targets="PnpmInstall"
