@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<LintRecordPath Condition=" '$(LintRecordPath)' == '' ">$(IntermediateOutputPath)/_.dpd-lint._</LintRecordPath>
 	</PropertyGroup>
+	<Target Name="PrepareLint" BeforeTargets="Lint" />
 	<Target Name="Lint"
 	        BeforeTargets="BeforeBuild" />
 	<Target Name="_DotnetLint"

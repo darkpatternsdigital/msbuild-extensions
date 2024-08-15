@@ -52,6 +52,10 @@ For solution-wide settings:
 
 Runs before build. Executes `dotnet format` for the project being built if `LintEnforceNoChanges` is not true, otherwise `dotnet format --verify-no-changes`.
 
+#### PrepareLint
+
+Runs before Lint. May be used prior to linting any project to run prerequisite build steps on a solution-wide basis.
+
 [ms-editorconfig]: https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/configuration-files#editorconfig
 [ms-enforcecodestyleinbuild]: https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#enforcecodestyleinbuild
 [ms-analysislevel]: https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#analysislevel

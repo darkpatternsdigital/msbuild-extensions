@@ -57,3 +57,7 @@ Executes the `PnpmLintScript`.
 
 Runs before `Publish`. Depends on `Build`. Produces an npm-compatible `.tgz` in
 the `$(PackageOutputPath)` directory.
+
+#### PrepareLint
+
+Runs before Lint. May be used prior to linting any project to run prerequisite build steps on a solution-wide basis.

@@ -105,6 +105,8 @@
         <Touch ForceTouch="true" Files="@(CompileOutputs)" />
     </Target>
 
+	<Target Name="PrepareLint" BeforeTargets="Lint" />
+
 	<Target Name="Lint"
 	        BeforeTargets="BeforeBuild" />
 
