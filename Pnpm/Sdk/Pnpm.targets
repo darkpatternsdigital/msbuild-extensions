@@ -14,7 +14,7 @@
     <PropertyGroup Condition=" '$(PnpmRootPath)' == '' ">
         <PnpmRootPath Condition=" '$(SolutionRoot)' != '' ">$(SolutionRoot)</PnpmRootPath>
         <PnpmRootPath Condition=" '$(PnpmRootPath)' == '' and '$(DirectoryBuildPropsPath)' != '' ">$([MSBuild]::EnsureTrailingSlash($([System.IO.Path]::GetDirectoryName('$(DirectoryBuildPropsPath)'))))</PnpmRootPath>
-        <PnpmRootPath Condition=" '$(SolutionRoot)' == '' ">$(ProjectDir)</PnpmRootPath>
+        <PnpmRootPath Condition=" '$(PnpmRootPath)' == '' ">$(ProjectDir)</PnpmRootPath>
     </PropertyGroup>
     <PropertyGroup>
         <PnpmStepRecordDir Condition=" '$(PnpmStepRecordDir)' == '' ">$(ProjectDir)node_modules\</PnpmStepRecordDir>
@@ -76,7 +76,7 @@
             <PnpmInstallProjectContents><![CDATA[
 <Project Sdk="Microsoft.Build.NoTargets/3.7.0">
 	<PropertyGroup>
-		<SolutionRoot>$(PnpmRootPath)</SolutionRoot>
+		<PnpmRootPath>$(PnpmRootPath)</PnpmRootPath>
 	</PropertyGroup>
 	<Import Project="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets" />
 </Project>
