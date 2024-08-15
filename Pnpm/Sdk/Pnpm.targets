@@ -5,8 +5,15 @@
         <PnpmLintScript Condition=" '$(PnpmLintScript)' == '' ">pnpm run --if-present lint</PnpmLintScript>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(PropertyGroup)' == '' ">
+    <PropertyGroup Condition=" '$(UseCorepack)' == 'true' ">
+        <PnpmBuildScript Condition="$(PnpmBuildScript.StartsWith('pnpm '))">corepack $(PnpmBuildScript)</PnpmBuildScript>
+        <PnpmTestScript Condition="$(PnpmTestScript.StartsWith('pnpm '))">corepack $(PnpmTestScript)</PnpmTestScript>
+        <PnpmLintScript Condition="$(PnpmLintScript.StartsWith('pnpm '))">corepack $(PnpmLintScript)</PnpmLintScript>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(PnpmRootPath)' == '' ">
         <PnpmRootPath Condition=" '$(SolutionRoot)' != '' ">$(SolutionRoot)</PnpmRootPath>
+        <PnpmRootPath Condition=" '$(PnpmRootPath)' == '' and '$(DirectoryBuildPropsPath)' != '' ">$([MSBuild]::EnsureTrailingSlash($([System.IO.Path]::GetDirectoryName('$(DirectoryBuildPropsPath)'))))</PnpmRootPath>
         <PnpmRootPath Condition=" '$(SolutionRoot)' == '' ">$(ProjectDir)</PnpmRootPath>
     </PropertyGroup>
     <PropertyGroup>

@@ -12,13 +12,17 @@
         <PnpmInstallScript Condition=" '$(PnpmInstallScript)' == '' and $(Configuration) == 'Release' ">pnpm install --frozen-lockfile</PnpmInstallScript>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(UseCorepack)' == 'true' ">
+        <PnpmInstallScript Condition="$(PnpmInstallScript.StartsWith('pnpm '))">corepack $(PnpmInstallScript)</PnpmInstallScript>
+    </PropertyGroup>
+
     <ItemGroup>
         <RestoreConfig Include="$(SolutionRoot)package.json" />
         <RestoreConfig Include="$(SolutionRoot)pnpm-lock.yaml" />
         <RestoreConfig Include="package.json" />
     </ItemGroup>
 
-    <Target Name="PnpmInstall" BeforeTargets="Restore;_GenerateProjectRestoreGraph" Inputs="@(RestoreConfig)" Outputs="$(PnpmInstallRecordPath)">
+    <Target Name="PnpmInstall" AfterTargets="Restore;_GenerateProjectRestoreGraph" Inputs="@(RestoreConfig)" Outputs="$(PnpmInstallRecordPath)">
         <!-- Launched via PnpmInstall to run in a critical section -->
         <Exec WorkingDirectory="$(SolutionRoot)" Command="$(PnpmInstallScript)" />
         <Touch AlwaysCreate="true" ForceTouch="true" Files="$(PnpmInstallRecordPath)" />

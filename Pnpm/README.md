@@ -18,6 +18,7 @@ Add build tooling to MSBuild to support PNPM projects!
 
 | Name | Decription | Default |
 | :--- | :--------- | :------ |
+| UseCorepack | Use pnpm via corepack if 'true' | Not set |
 | PnpmBuildScript | The command line to run during the build phase | `pnpm run --if-present build` |
 | PnpmTestScript | The command line to run for `dotnet test` | `pnpm run --if-present test` |
 | PnpmLintScript | The command line to run for lint checks | `pnpm run --if-present lint` |
