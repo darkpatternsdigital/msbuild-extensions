@@ -82,7 +82,7 @@
     </Target>
 
     <Target Name="PnpmInstall"
-        BeforeTargets="NodeBuild;Lint;Restore;_GenerateProjectRestoreGraph"
+        BeforeTargets="Restore;_GenerateProjectRestoreGraph"
         Inputs="@(RestoreConfig)"
         Outputs="$(PnpmInstallRecordPath)"
         Condition=" '$(PnpmRootPath)' != '' and '$(PnpmInstallProjectPath)' == '' ">
