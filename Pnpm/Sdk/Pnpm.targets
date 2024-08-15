@@ -68,7 +68,7 @@
 
     <Target Name="SetupRootInstalProject"
         Condition=" '$(ArtifactsPath)' != '' "
-        BeforeTargets="CollectPackageReferences"
+        BeforeTargets="CollectPackageReferences;_GenerateRestoreProjectPathItemsAllFrameworks"
         Inputs="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets"
         Outputs="$(PnpmInstallProjectPath)"
     >
