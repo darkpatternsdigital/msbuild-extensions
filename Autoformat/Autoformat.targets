@@ -2,6 +2,11 @@
 	<PropertyGroup>
 		<LintRecordPath Condition=" '$(LintRecordPath)' == '' ">$(IntermediateOutputPath)/_.dpd-lint._</LintRecordPath>
 	</PropertyGroup>
+
+	<ItemGroup Condition=" '$(EditorConfigFiles)' == '' ">
+		<EditorConfigFiles Include="$(SolutionRoot).editorconfig" Visible="false" />
+	</ItemGroup>
+
 	<Target Name="PrepareLint" BeforeTargets="Lint" />
 	<Target Name="Lint"
 	        BeforeTargets="BeforeBuild" />
