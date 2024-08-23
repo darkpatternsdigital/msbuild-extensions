@@ -17,13 +17,9 @@ For solution-wide settings:
 1. Add the reference to `DarkPatterns.Build.Autoformat` via the
    `Directory.Build.props` to ensure autoformat is set for all projects.
 
-2. Ensure `SolutionRoot` is set within the `Directory.Build.props` as follows:
-
-	```xml
-	<SolutionRoot>$(MSBuildThisFileDirectory)</SolutionRoot>
-	```
-
-3. Place the `.editorconfig` in the same folder as your Directory.Build.props.
+2. Place the `.editorconfig` in the same folder as your Directory.Build.props.
+   Alternatively, be sure to include your `.editorconfig` in the
+   `EditorConfigFiles` item.
 
 ## Additional recommendations
 

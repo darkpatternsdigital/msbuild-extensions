@@ -23,6 +23,9 @@
         <PnpmInstallRecordPath Condition=" '$(PnpmInstallRecordPath)' == '' ">$(PnpmRootPath)node_modules\_.install.$(Configuration)._</PnpmInstallRecordPath>
         <PnpmLintRecordPath Condition=" '$(PnpmLintRecordPath)' == '' ">$(PnpmStepRecordDir)_.lint.$(Configuration)._</PnpmLintRecordPath>
     </PropertyGroup>
+    <PropertyGroup>
+        <LintSkipDotnet Condition=" '$(LintSkipDotnet)' == '' ">true</LintSkipDotnet>
+    </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="$(PnpmInstallProjectPath)" />
     </ItemGroup>
