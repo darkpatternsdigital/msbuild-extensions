@@ -110,6 +110,13 @@
             Properties="SolutionRoot=$(PnpmRootPath)" />
     </Target>
 
+
+    <PropertyGroup>
+        <PrepareForRunDependsOn>
+            NodeBuild
+        </PrepareForRunDependsOn>
+    </PropertyGroup>
+
     <Target Name="NodeBuild"
         Condition="'$(PnpmBuildScript)' != ''"
         BeforeTargets="Build"
