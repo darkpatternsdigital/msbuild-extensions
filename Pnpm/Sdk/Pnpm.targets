@@ -1,5 +1,9 @@
 <Project>
     <PropertyGroup>
+        <TargetFramework Condition=" '$(TargetFramework)' == '' and '$(TargetFrameworks)' == '' ">netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <PnpmBuildScript Condition=" '$(PnpmBuildScript)' == '' ">pnpm run --if-present build</PnpmBuildScript>
         <PnpmTestScript Condition=" '$(PnpmTestScript)' == '' ">pnpm run --if-present test</PnpmTestScript>
         <PnpmLintScript Condition=" '$(PnpmLintScript)' == '' ">pnpm run --if-present lint</PnpmLintScript>
