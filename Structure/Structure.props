@@ -1,4 +1,16 @@
 <Project>
+	<!-- Checks that defaults are set -->
+	<PropertyGroup>
+		<UseArtifactsOutputSetCorrectly Condition=" '$(UseArtifactsOutput)' != 'true' ">false</UseArtifactsOutputSetCorrectly>
+		<SolutionRootSet Condition=" '$(SolutionRoot)' == '' ">false</SolutionRootSet>
+		<RepositoryEngineeringDirSet Condition=" '$(RepositoryEngineeringDir)' != '$(SolutionRoot)eng/' ">false</RepositoryEngineeringDirSet>
+	</PropertyGroup>
+
+	<!--
+	Overrides the defaults so they're a bit safer - these properties won't be
+	used in the Evaluate stage because the NuGet packages aren't loaded yet...
+	but it works for most things.
+	-->
 	<PropertyGroup Condition=" '$(SolutionRoot)' == '' ">
 		<SolutionRoot>$([MSBuild]::EnsureTrailingSlash($([System.IO.Path]::GetDirectoryName('$(DirectoryBuildPropsPath)'))))</SolutionRoot>
 	</PropertyGroup>
@@ -7,13 +19,6 @@
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(RootNamespace)' != '' ">
 		<AssemblyName Condition=" '$(AssemblyName)' == '' or '$(AssemblyName)' == '$(MSBuildProjectName)' ">$(RootNamespace).$(MSBuildProjectName)</AssemblyName>
-	</PropertyGroup>
-
-	<!-- Checks that defaults are set -->
-	<PropertyGroup>
-		<UseArtifactsOutputSetCorrectly Condition=" '$(UseArtifactsOutput)' != 'true' ">false</UseArtifactsOutputSetCorrectly>
-		<SolutionRootSet Condition=" '$(SolutionRoot)' == '' ">false</SolutionRootSet>
-		<RepositoryEngineeringDirSet Condition=" '$(RepositoryEngineeringDir)' != '$(SolutionRoot)eng/' ">false</RepositoryEngineeringDirSet>
 	</PropertyGroup>
 
 	<Target Name="_VerifyDarkPatternsProjectStructure"
