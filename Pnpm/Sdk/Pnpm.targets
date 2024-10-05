@@ -47,6 +47,9 @@
         <Compile Include="src/**" Watch="false" />
     </ItemGroup>
     <ItemGroup>
+        <None Remove="node_modules/**/*" />
+    </ItemGroup>
+    <ItemGroup>
         <Watch Include="@(CompileConfig)" />
         <Watch Include="@(RestoreConfig)" />
     </ItemGroup>
