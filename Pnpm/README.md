@@ -31,7 +31,7 @@ Add build tooling to MSBuild to support PNPM projects!
 | Name | Decription | Default |
 | :--- | :--------- | :------ |
 | CompileOutputs | The files that will be created by the build process | None; required to run build script |
-| Compile | The inputs for build and lint | `src/**` |
+| Compile or PnpmCompile | The inputs for build and lint. All files are moved from `Compile` to `PnpmCompile` to avoid `dotnet format` on TS files. | `src/**` |
 | CompileConfig[^1] | Inputs that could affect build configuration options. | `.*rc` and `*.json` files in the project root |
 | RestoreConfig[^1] | The inputs for the node restore configuration. | `$(PnpmRootPath)package.json`, `$(PnpmRootPath)pnpm-lock.yaml`, and `package.json` |
 | PnpmPackagedFiles | Additional inputs that will cause the packaged files to change | All CompileConfig items |

@@ -3,7 +3,7 @@
 		<LintRecordPath Condition=" '$(LintRecordPath)' == '' ">$(IntermediateOutputPath)/_.dpd-lint._</LintRecordPath>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(EditorConfigFiles)' == '' ">
+	<ItemGroup Condition=" '@(EditorConfigFiles)' == '' ">
 		<EditorConfigFiles Include="$(SolutionRoot).editorconfig" Visible="false" />
 	</ItemGroup>
 
@@ -17,10 +17,10 @@
 	        Outputs="$(LintRecordPath)">
 		<Exec Condition=" '$(LintEnforceNoChanges)' != 'true' "
 		      WorkingDirectory="$(ProjectDir)"
-		      Command="dotnet format &quot;$(ProjectPath)&quot;" />
+		      Command="dotnet format $(DotnetFormatArgs) &quot;$(ProjectPath)&quot;" />
 		<Exec Condition=" '$(LintEnforceNoChanges)' == 'true' "
 		      WorkingDirectory="$(ProjectDir)"
-		      Command="dotnet format &quot;$(ProjectPath)&quot; --verify-no-changes" />
+		      Command="dotnet format $(DotnetFormatArgs) &quot;$(ProjectPath)&quot; --verify-no-changes" />
 		<MakeDir Directories="$(IntermediateOutputPath)"/>
 		<Touch AlwaysCreate="true" ForceTouch="true" Files="$(LintRecordPath)" />
 	</Target>

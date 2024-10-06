@@ -5,6 +5,7 @@
 
 		<LintSkip>false</LintSkip>
 		<LintEnforceNoChanges Condition=" '$(Configuration)' == 'Release' ">true</LintEnforceNoChanges>
+		<DotnetFormatArgs Condition=" '$(DotnetFormatArgs)' == '' "></DotnetFormatArgs>
 	</PropertyGroup>
 
 	<!-- EditorConfigFiles automatically get loaded from the project's parent directories -->

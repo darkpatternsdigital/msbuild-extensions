@@ -43,10 +43,15 @@
         <CompileConfig Include=".*rc" Exclude="@(RestoreConfig)" />
         <CompileConfig Include="*.json" Exclude="@(RestoreConfig)" />
     </ItemGroup>
-    <ItemGroup Condition=" '@(Compile)' == '' ">
-        <Compile Include="src/**" Watch="false" />
+    <ItemGroup Condition=" '@(Compile)' != '' ">
+        <PnpmCompile Include="@(Compile)" />
+        <Compile Remove="**/*" />
+    </ItemGroup>
+    <ItemGroup Condition=" '@(PnpmCompile)' == '' ">
+        <PnpmCompile Include="src/**" Watch="false" />
     </ItemGroup>
     <ItemGroup>
+        <Watch Include="@(PnpmCompile->HasMetadata('Watch')->WithMetadataValue('Watch','true'))" />
         <None Remove="node_modules/**/*" />
     </ItemGroup>
     <ItemGroup>
@@ -88,7 +93,7 @@
 	<PropertyGroup>
 		<PnpmRootPath>$(PnpmRootPath)</PnpmRootPath>
 	</PropertyGroup>
-	<Import Project="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets" Condition="exists('$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets')" />
 </Project>
             ]]></PnpmInstallProjectContents>
         </PropertyGroup>
@@ -123,7 +128,7 @@
     <Target Name="NodeBuild"
         Condition="'$(PnpmBuildScript)' != ''"
         BeforeTargets="Build"
-        Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)"
+        Inputs="@(PnpmCompile);@(RestoreConfig);@(CompileConfig)"
         Outputs="@(CompileOutputs)">
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmBuildScript)" />
         <Touch ForceTouch="true" Files="@(CompileOutputs)" />
@@ -137,7 +142,7 @@
     <Target Name="_PnpmLint"
         BeforeTargets="BeforeBuild"
         Condition="'$(PnpmLintScript)' != '' and '$(LintSkipPnpm)' != 'true' "
-        Inputs="@(Compile);@(RestoreConfig);@(CompileConfig)"
+        Inputs="@(PnpmCompile);@(RestoreConfig);@(CompileConfig)"
         Outputs="$(PnpmLintRecordPath)">
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(PnpmLintScript)" />
         <Touch ForceTouch="true" Files="@(PnpmLintRecordPath)" />

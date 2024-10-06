@@ -41,6 +41,7 @@ For solution-wide settings:
 | AnalysisLevel | [See Microsoft's documentation for AnalysisLevel][ms-analysislevel] | `latest-Recommended` |
 | LintSkipDotnet | Skips the Lint target entirely if set to `true` | `false` |
 | LintEnforceNoChanges | When `true`, will not update files but instead will cause an error if not already in the correct format | `true` if Configuration is `Release` |
+| DotnetFormatArgs | Additional arguments for the `dotnet format` command. | Empty |
 
 ### Targets
 
