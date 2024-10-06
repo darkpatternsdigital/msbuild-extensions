@@ -43,10 +43,15 @@
         <CompileConfig Include=".*rc" Exclude="@(RestoreConfig)" />
         <CompileConfig Include="*.json" Exclude="@(RestoreConfig)" />
     </ItemGroup>
+    <ItemGroup Condition=" '@(Compile)' != '' ">
+        <PnpmCompile Include="@(Compile)" />
+        <Compile Remove="**/*" />
+    </ItemGroup>
     <ItemGroup Condition=" '@(PnpmCompile)' == '' ">
         <PnpmCompile Include="src/**" Watch="false" />
     </ItemGroup>
     <ItemGroup>
+        <Watch Include="@(PnpmCompile->HasMetadata('Watch')->WithMetadataValue('Watch','true'))" />
         <None Remove="node_modules/**/*" />
     </ItemGroup>
     <ItemGroup>
@@ -88,7 +93,7 @@
 	<PropertyGroup>
 		<PnpmRootPath>$(PnpmRootPath)</PnpmRootPath>
 	</PropertyGroup>
-	<Import Project="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets" Condition="exists('$(MSBuildThisFileDirectory)pnpm-install/pnpm-install.targets')" />
 </Project>
             ]]></PnpmInstallProjectContents>
         </PropertyGroup>
