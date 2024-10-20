@@ -4,4 +4,5 @@
 		<TargetFramework Condition=" '$(TargetFramework)' == '' ">netstandard2.0</TargetFramework>
 	</PropertyGroup>
 	<Import Project="NoTargets/Sdk.props" />
+	<Import Project="$(MSBuildThisFileDirectory)Pnpm.props" Condition="Exists('$(MSBuildThisFileDirectory)Pnpm.props')" />
 </Project>
