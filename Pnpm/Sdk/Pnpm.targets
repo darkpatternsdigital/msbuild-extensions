@@ -140,7 +140,8 @@
 	        BeforeTargets="BeforeBuild" />
 
     <Target Name="_PnpmLint"
-        BeforeTargets="BeforeBuild"
+        BeforeTargets="BeforeBuild;Lint"
+        DependsOnTargets="PrepareLint"
         Condition="'$(PnpmLintScript)' != '' and '$(LintSkipPnpm)' != 'true' "
         Inputs="@(PnpmCompile);@(RestoreConfig);@(CompileConfig)"
         Outputs="$(PnpmLintRecordPath)">

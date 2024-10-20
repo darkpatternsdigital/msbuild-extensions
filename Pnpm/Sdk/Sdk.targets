@@ -7,5 +7,5 @@
 		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
 	</PropertyGroup>
 
-	<Import Project="$(MSBuildThisFileDirectory)Pnpm.targets" />
+	<Import Project="$(MSBuildThisFileDirectory)Pnpm.targets" Condition="Exists('$(MSBuildThisFileDirectory)Pnpm.targets')" />
 </Project>

@@ -26,7 +26,10 @@
         <RestoreConfig Include="package.json" />
     </ItemGroup>
 
-    <Target Name="PnpmInstall" AfterTargets="Restore;_GenerateProjectRestoreGraph" Inputs="@(RestoreConfig)" Outputs="$(PnpmInstallRecordPath)">
+    <Target Name="PnpmInstall"
+            AfterTargets="Restore;_GenerateProjectRestoreGraph"
+            Inputs="@(RestoreConfig)"
+            Outputs="$(PnpmInstallRecordPath)">
         <!-- Launched via PnpmInstall to run in a critical section -->
         <Exec WorkingDirectory="$(PnpmRootPath)" Command="$(PnpmInstallScript)" />
         <Touch AlwaysCreate="true" ForceTouch="true" Files="$(PnpmInstallRecordPath)" />
