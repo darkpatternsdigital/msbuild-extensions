@@ -23,7 +23,7 @@
     <ItemGroup>
         <RestoreConfig Include="$(PnpmRootPath)package.json" />
         <RestoreConfig Include="$(PnpmRootPath)pnpm-lock.yaml" />
-        <RestoreConfig Include="package.json" />
+        <RestoreConfig Include="package.json" Condition=" Exists('package.json') " />
     </ItemGroup>
 
     <Target Name="PnpmInstall"
